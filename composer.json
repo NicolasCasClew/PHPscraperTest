@@ -1,0 +1,11 @@
+{
+    "name": "nicom/selenium-scraper-test",
+    "autoload": {
+        "psr-4": {
+            "Nicom\\SeleniumScraperTest\\": "src/"
+        }
+    },
+    "require": {
+        "php-webdriver/webdriver": "^1.15"
+    }
+}
