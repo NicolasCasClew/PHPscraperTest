@@ -21,54 +21,65 @@ $chromeOptions = new ChromeOptions();
 
 $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
 
-// initialize a driver to control a Chrome instance
+// creamos driver
 $driver = RemoteWebDriver::create($host, $capabilities);
 
 
-// maximize the window to avoid responsive rendering
+// agrandamos ventana
 $driver->manage()->window()->maximize();
 
-// open the target page in a new tab
+// abrimos ventana objetivo
 $driver->get('https://www.vividseats.com/real-madrid-tickets-estadio-santiago-bernabeu-12-22-2024--sports-soccer/production/5045935'); //'https://www.vividseats.com/real-madrid-tickets-estadio-santiago-bernabeu-12-22-2024--sports-soccer/production/5045935'
 
+//esperamos que se ejecute el js
 usleep(3000000);
-// extract the HTML page source and print it
+
+// extraemos el html (debug) 
 $html = $driver->getPageSource();
 echo $html;
-//$product_element = $driver->findElement(WebDriverBy::className('_42ft _4jy0 _6lth _4jy6 _4jy1 selected _51sy'));//x1ja2u2z x78zum5
-//$product_element->click();
 
 $product_element = $driver->findElement(WebDriverBy::id('px-captcha')); //x1ja2u2z x78zum5
-//$product_element->click();
-echo "ENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADOENCONTRADO";
-//echo $product_element->getText();
-//Accedemos al shadow Root
+
+// debug
+echo "Objeto encontrado \n";
+
+// Accedemos al shadow Root
 $shadowRoot = $product_element->getShadowRoot();
 
+// obtenemos los iframes almacenados en este (4)
+// de entre los 4 iframes 1 contiene el boton que hay que apretar
 $iFramesInShadow = $shadowRoot->findElements(WebDriverBy::tagName('h1'));
+
+// debug
 echo "EL NUMERO ES :           ";
 echo count($iFramesInShadow);
-echo "     wao \n\n\n";
 
 
+// iteramos y mantenemos pulsados por 10 segundos todos los botones
 foreach ($iFramesInShadow as $iframe) {
     echo "REPETICION \n";
+    //...
 }
 $elementInShadow = $shadowRoot->findElement(WebDriverBy::partialLinkText('Pulsar y mantener pulsado'));
 
 $action = new WebDriverActions($driver);
 
-// Hacer clic y mantenerlo durante 10 segundos
-$action->clickAndHold($product_element) // Mantiene el clic
-    ->perform(); // Ejecuta la acción de mantener el clic
+// hace click y lo mantiene
+$action->clickAndHold($product_element)
+    ->perform();
 
 usleep(10000000); // 10 segundos en microsegundos
 
-// Soltar el clic después de la pausa
-$action->release($product_element)->perform(); // Libera el clic
+// soltamos click
+$action->release($product_element)->perform();
 
+// debug
 $html = $driver->getPageSource();
 echo $html;
-// Cerrar
-// close the driver and release its resources
+
+// cerramos driver
 $driver->close();
+
+
+
+//lo mismo pero con SeatGeek
